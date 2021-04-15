@@ -135,25 +135,29 @@ def start_pipeline(delete_temp_files=True, send_mail=True, send_to_mongo=True, e
         file_read_write.make_log_email_file(phones_metadata)
 
         # (3)
+        print("Beginning ebay calls")
         ebay_call_start = time.time()
         phones = call(phones_metadata, ebay_page_reach, listings_per_page, recursive_get)
         ebay_call_stop = time.time()
-        print(f'eBay calls duration: {ebay_call_stop-ebay_call_start}')
+        print(f'eBay calls duration: {ebay_call_stop-ebay_call_start}', end='\n\n')
 
+        print("Beginning duplicate filter")
         duplicate_filter_start = time.time()
         no_duplicates()
         duplicate_filter_stop = time.time()
         print(f'duplicate listing filter duration: {duplicate_filter_stop-duplicate_filter_start}')
 
+        print("Beginning priority sort")
         sort_start = time.time()
         priority_sort(phones)
         sort_stop = time.time()
-        print(f'listings sort duration {sort_stop-sort_start}')
+        print(f'listings sort duration {sort_stop-sort_start}', end='\n\n')
 
+        print("Beginning Jsonify")
         jsonify_start = time.time()
         jsonify_listings(phones)
         jsonify_stop = time.time()
-        print(f'jsonify duration: {jsonify_stop-jsonify_start}')
+        print(f'jsonify duration: {jsonify_stop-jsonify_start}', end='\n\n')
 
         # (4)
         for phone in phones:

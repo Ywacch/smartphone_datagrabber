@@ -1,7 +1,11 @@
 import os
 from ebaysdk.exception import ConnectionError
+
+from datagrab import email_log
 from datagrab.datasources.ebay import ebay_config
 from ebaysdk.finding import Connection as FindConnect
+
+from datagrab.utils import file_read_write
 
 
 def get_connection():
@@ -86,14 +90,14 @@ def call_made():
     reduces the daily number of eBay API finding calls allowed when called and then increments the calls_made in logs by 1
     :return:
     """
-    metrics = json_handler.get_metrics()
+    metrics = file_read_write.get_metrics()
     metrics['finding_api_calls_left'] -= 1
-    json_handler.write_api_metrics(metrics)
+    file_read_write.write_api_metrics(metrics)
 
     if os.path.exists(email_log):
-        log = json_handler.get_email_log()
+        log = file_read_write.get_email_log()
         log['calls_made'] += 1
-        json_handler.write_email_log(log)
+        file_read_write.write_email_log(log)
 
 
 def reset_daily_call_limit():
@@ -105,4 +109,4 @@ def reset_daily_call_limit():
     ebay_metrics['finding_api_call_limit'] = 5000
     ebay_metrics['finding_api_calls_left'] = 5000
 
-    json_handler.write_api_metrics(ebay_metrics)
+    file_read_write.write_api_metrics(ebay_metrics)
