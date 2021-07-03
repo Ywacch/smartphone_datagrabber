@@ -132,6 +132,7 @@ class PhoneSilo:
             },
             'sortOrder': 'BestMatch'
         }
+        # access to findCompletedItems is restricted and deprecated to the public
         verbs = ['findItemsAdvanced', 'findCompletedItems', 'findItemsByKeywords']
         page_reach = self.search_page_length
         listings = execute_call(request_dict=request, page_iter=page_reach, verb=verbs[0], listings_expected= request['paginationInput']['entriesPerPage'] * page_reach, recursive_get=self.dataget_recursive)

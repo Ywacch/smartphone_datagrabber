@@ -1,4 +1,5 @@
 import os
+import traceback
 from ebaysdk.exception import ConnectionError
 
 from datagrab import email_log
@@ -15,7 +16,6 @@ def get_connection():
     """
     try:
         api = FindConnect(config_file=ebay_config, siteid="EBAY-ENCA")
-
     except ConnectionError as e:
         print("ebay_caller.get_connection: Connection fault")
         print(f'\t{e}')
@@ -43,25 +43,31 @@ def execute_call(request_dict, page_iter=1, verb='findItemsAdvanced', listings_e
     api = get_connection()
     if api:
         while iter_count <= page_iter:
-            resp = api.execute(verb, request_dict).dict()
-            call_made()
-            if resp['ack'] == 'Success':
-                # check if the number of pages to request is more than available pages and correct it if needed
-                actual_page_count = int(resp['paginationOutput']['totalPages'])
-                if actual_page_count < page_iter:
-                    page_iter = actual_page_count
+            try:
+                resp = api.execute(verb, request_dict).dict()
+            except Exception as e:
+                print(f"ebay_caller.execute_call: {e}")
+            else:
+                call_made()
+                if resp['ack'] == 'Success':
+                    # check if the number of pages to request is more than available pages and correct it if needed
+                    actual_page_count = int(resp['paginationOutput']['totalPages'])
+                    if actual_page_count < page_iter:
+                        page_iter = actual_page_count
 
-                try:
-                    phone_listings.extend(resp['searchResult']['item'])  # sometimes gives ('KeyError', ('item',))
-                except KeyError as e:
-                    print(f'ebay_caller.execute_call: {e}')
-                except Exception as e:
-                    print(f'ebay_caller.execute_call: {e}')
+                    try:
+                        phone_listings.extend(resp['searchResult']['item'])  # sometimes gives ('KeyError', ('item',))
+                    except KeyError:
+                        print(f'ebay_caller.execute_call: KeyError occurred')
+                        traceback.print_exc()
+                    except Exception:
+                        print(f'ebay_caller.execute_call: Exception occurred')
+                        traceback.print_exc()
 
-                iter_count += 1
-                # go to next page of response
-                request_dict['paginationInput']['pageNumber'] += 1
-                page_count += 1
+                    iter_count += 1
+                    # go to next page of response
+                    request_dict['paginationInput']['pageNumber'] += 1
+                    page_count += 1
 
     #
     clean_listings = remove_multi_variations(phone_listings)

@@ -106,10 +106,11 @@ def set_sample_size(silo, value):
     :return:
     """
     log = get_email_log()
-    log['store'][silo.search_data['brand']][silo.search_data['series']][
-                    silo.search_data['model']][
-                    silo.search_data['specs']]['sample_size'] = value
-    write_email_log(log)
+    if log:
+        log['store'][silo.search_data['brand']][silo.search_data['series']][
+                        silo.search_data['model']][
+                        silo.search_data['specs']]['sample_size'] = value
+        write_email_log(log)
 
 
 def set_highest_listing(silo, value):
@@ -120,10 +121,11 @@ def set_highest_listing(silo, value):
     :return:
     """
     log = get_email_log()
-    log['store'][silo.search_data['brand']][silo.search_data['series']][
-        silo.search_data['model']][
-        silo.search_data['specs']]['highest_listing'] = value
-    write_email_log(log)
+    if log:
+        log['store'][silo.search_data['brand']][silo.search_data['series']][
+            silo.search_data['model']][
+            silo.search_data['specs']]['highest_listing'] = value
+        write_email_log(log)
 
 
 def set_lowest_listing(silo, value):
@@ -134,10 +136,11 @@ def set_lowest_listing(silo, value):
     :return:
     """
     log = get_email_log()
-    log['store'][silo.search_data['brand']][silo.search_data['series']][
-        silo.search_data['model']][
-        silo.search_data['specs']]['lowest_listing'] = value
-    write_email_log(log)
+    if log:
+        log['store'][silo.search_data['brand']][silo.search_data['series']][
+            silo.search_data['model']][
+            silo.search_data['specs']]['lowest_listing'] = value
+        write_email_log(log)
 
 
 def set_highest_price(silo, value):
@@ -148,10 +151,11 @@ def set_highest_price(silo, value):
     :return:
     """
     log = get_email_log()
-    log['store'][silo.search_data['brand']][silo.search_data['series']][
-        silo.search_data['model']][
-        silo.search_data['specs']]['highest_price'] = value
-    write_email_log(log)
+    if log:
+        log['store'][silo.search_data['brand']][silo.search_data['series']][
+            silo.search_data['model']][
+            silo.search_data['specs']]['highest_price'] = value
+        write_email_log(log)
 
 
 def set_lowest_price(silo, value):
@@ -162,10 +166,11 @@ def set_lowest_price(silo, value):
     :return:
     """
     log = get_email_log()
-    log['store'][silo.search_data['brand']][silo.search_data['series']][
-        silo.search_data['model']][
-        silo.search_data['specs']]['lowest_price'] = value
-    write_email_log(log)
+    if log:
+        log['store'][silo.search_data['brand']][silo.search_data['series']][
+            silo.search_data['model']][
+            silo.search_data['specs']]['lowest_price'] = value
+        write_email_log(log)
 
 
 def set_discarded_listings(value):
@@ -175,8 +180,9 @@ def set_discarded_listings(value):
     :return:
     """
     log = get_email_log()
-    log['discarded_listings'] = value
-    write_email_log(log)
+    if log:
+        log['discarded_listings'] = value
+        write_email_log(log)
 
 
 def set_runtime(value):
@@ -186,8 +192,9 @@ def set_runtime(value):
     :return:
     """
     log = get_email_log()
-    log['runtime'] = value
-    write_email_log(log)
+    if log:
+        log['runtime'] = value
+        write_email_log(log)
 
 
 def set_time(value):
@@ -197,8 +204,9 @@ def set_time(value):
     :return:
     """
     log = get_email_log()
-    log['time'] = value
-    write_email_log(log)
+    if log:
+        log['time'] = value
+        write_email_log(log)
 
 
 def write_listings(data, indent_len=2):
@@ -208,6 +216,7 @@ def write_listings(data, indent_len=2):
     :param indent_len:
     :return:
     """
+
     with open(temp_listings_store, 'w') as file:
         json.dump(data, file, indent=indent_len)
 
@@ -228,8 +237,13 @@ def get_temp_listings():
 
     :return:
     """
-    with open(temp_listings_store, 'r') as file:
-        return json.load(file)
+    try:
+        with open(temp_listings_store, 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        print(f'file_read_write.get_temp_listings: the file "{temp_listings_store}" can\'t be found')
+    except Exception as e:
+        print(f'file_read_write.get_temp_listings: {e}')
 
 
 def get_metrics():
@@ -237,8 +251,13 @@ def get_metrics():
 
     :return:
     """
-    with open(eBay_API_metrics, 'r') as file:
-        return json.load(file)
+    try:
+        with open(eBay_API_metrics, 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        print(f'file_read_write.get_email_log: the file "{email_log}" can\'t be found')
+    except Exception as e:
+        print(f'file_read_write.get_email_log: {e}')
 
 
 def write_email_log(data, indent_len=2):
@@ -248,8 +267,13 @@ def write_email_log(data, indent_len=2):
     :param indent_len:
     :return:
     """
-    with open(email_log, 'w') as file:
-        json.dump(data, file, indent=indent_len)
+    try:
+        with open(email_log, 'w') as file:
+            json.dump(data, file, indent=indent_len)
+    except FileNotFoundError as e:
+        print(f"file_read_write.write_email_log: File not found error{e}")
+    except Exception as e:
+        print(f"file_read_write.write_email_log: {e}")
 
 
 def get_email_log():
@@ -261,4 +285,6 @@ def get_email_log():
         with open(email_log, 'r') as file:
             return json.load(file)
     except FileNotFoundError:
-        print(f'the file "{email_log}" can\'t be found')
+        print(f'file_read_write.get_email_log: the file "{email_log}" can\'t be found')
+    except Exception as e:
+        print(f'file_read_write.get_email_log: {e}')

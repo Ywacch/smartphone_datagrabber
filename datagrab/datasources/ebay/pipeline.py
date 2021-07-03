@@ -1,12 +1,12 @@
 import time
 from queue import PriorityQueue
 
-from datagrab import phone_metadata
-from datagrab.database import mongo_reads, mongo_writes
-from datagrab.datasources.phones_listongs_matcher import match_phone_listing
 from datagrab.phone_metadata import Phone
+from datagrab.datasources.ebay import ebay_caller
+from datagrab.database import mongo_reads, mongo_writes
 from datagrab.utils import file_read_write, emailer, phone_stats_calc
 from datagrab.utils.file_read_write import write_listings, get_temp_listings
+from datagrab.datasources.phones_listongs_matcher import match_phone_listing
 
 
 def call(phone_items, search_length, page_size, recursive_get=True):
@@ -126,6 +126,9 @@ def start_pipeline(delete_temp_files=True, send_mail=True, send_to_mongo=True, e
 
     pipeline_start_time = time.time()
 
+    # reset the call limit number before making new eBay api calls
+    ebay_caller.reset_daily_call_limit()
+
     # (1)
     phones_metadata = mongo_reads.get_phones_metadata()
 
@@ -145,7 +148,7 @@ def start_pipeline(delete_temp_files=True, send_mail=True, send_to_mongo=True, e
         duplicate_filter_start = time.time()
         no_duplicates()
         duplicate_filter_stop = time.time()
-        print(f'duplicate listing filter duration: {duplicate_filter_stop-duplicate_filter_start}')
+        print(f'duplicate listing filter duration: {duplicate_filter_stop-duplicate_filter_start}', end='\n\n')
 
         print("Beginning priority sort")
         sort_start = time.time()
@@ -170,7 +173,7 @@ def start_pipeline(delete_temp_files=True, send_mail=True, send_to_mongo=True, e
 
     pipeline_stop_time = time.time()
 
-    file_read_write.set_runtime(pipeline_start_time - pipeline_stop_time)
+    file_read_write.set_runtime(pipeline_stop_time - pipeline_start_time)
 
     # (6)
     if send_mail:
