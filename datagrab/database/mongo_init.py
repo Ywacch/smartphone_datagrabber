@@ -14,7 +14,8 @@ def get_config():
             parsed_yml = yaml.load(file, Loader=yaml.FullLoader)
             return parsed_yml
     except FileNotFoundError:
-        print("mongo_init.get_config: Config file not found. Please insert a file named 'config.yaml' in the database/datafiles directory")
+        print("mongo_init.get_config: Config file not found. Please insert a file named 'config.yaml' in the "
+              "database/datafiles directory")
     except Exception as e:
         print(f"mongo_init.get_config: Error occurred: {e}")
 

@@ -27,7 +27,7 @@ def call(phone_items, search_length, page_size, recursive_get=True):
     return phones
 
 
-def no_duplicates():
+def filter_duplicates():
     """
 
     :return:
@@ -109,7 +109,7 @@ def start_pipeline(delete_temp_files=True, send_mail=True, send_to_mongo=True, e
 
     (3) 4 main steps of the ebay data pipeline:
         call - where the calls to the ebay API are made
-        no_duplicates - iterates through the list of phone listing dictionaries and filters out the duplicates
+        filter_duplicates - iterates through the list of phone listing dictionaries and filters out the duplicates
         priority_sort - match listings accurately to their phone specifications
         jsonify_listings -
 
@@ -130,7 +130,7 @@ def start_pipeline(delete_temp_files=True, send_mail=True, send_to_mongo=True, e
     ebay_caller.reset_daily_call_limit()
 
     # (1)
-    phones_metadata = mongo_reads.get_phones_metadata()
+    phones_metadata = mongo_reads.get_phones_data()
 
     if phones_metadata:
         # (2)
@@ -146,7 +146,7 @@ def start_pipeline(delete_temp_files=True, send_mail=True, send_to_mongo=True, e
 
         print("Beginning duplicate filter")
         duplicate_filter_start = time.time()
-        no_duplicates()
+        filter_duplicates()
         duplicate_filter_stop = time.time()
         print(f'duplicate listing filter duration: {duplicate_filter_stop-duplicate_filter_start}', end='\n\n')
 
