@@ -2,10 +2,10 @@ import pymongo.errors
 from datagrab.database import mongo_init
 
 
-def get_phones_metadata():
+def get_phones_data():
     """
-    Connect to the phones database to collect the list of phones by metadata (brand, model, etc).
-    This metadata will be use for searching and sorting data collected from the datasources (like ebay listings data)
+    Connect to the phones database to collect the list of phones by data (brand, model, etc).
+    This data will be use for searching and sorting data collected from the datasources (like ebay listings data)
     :return: A list of dictionaries of phones containing needed metadata for searching through & sorting collected data
     """
     phone_metalist = []
