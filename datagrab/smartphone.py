@@ -46,15 +46,18 @@ class Phone:
         storage_size = self.phone_specs.get_storagesize()
 
         return {
-            'phone': self.phone_specs.get_search_str(),
-            'storage': self.phone_specs.get_storagesize(),
+            'phone': name,
+            'storage': storage_size,
             'full_str': name + " " + storage_size.replace(" ", "")
         }
 
 
 def make_phones(phone_list):
     """Construct python objects representing smartphones with their specifications
-        """
+
+       :param phone_list: list of data of each smartphone to make objects out of
+       :return: a list of phone objects
+    """
 
     phones = []
     for phone_dict in phone_list:

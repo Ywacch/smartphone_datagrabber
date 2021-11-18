@@ -44,7 +44,7 @@ def make_json_nested_store(phones):
     write_listings(phones_dict)
 
 
-def make_log_email_file(phones):
+def generate_report_file(phones):
     """
 
     :param phones:

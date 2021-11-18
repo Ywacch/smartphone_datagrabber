@@ -1,10 +1,7 @@
-from pprint import pprint
-from datagrab import smartphone
-from datagrab.database import mongo_reads
+import yaml
+from datagrab.datasources.ebay import ebay_config
 
-phone_db = mongo_reads.get_phones_data()
+with open(ebay_config) as file:
+    config = yaml.load(file.read(), Loader=yaml.FullLoader)
+    print(config['svcs.ebay.com']['appid'])
 
-phones = smartphone.make_phones(phone_db)
-
-for count, phone in enumerate(phones, start=1):
-    print(count, phone.get_search_data())
