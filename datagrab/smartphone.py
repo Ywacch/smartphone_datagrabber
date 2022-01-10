@@ -18,6 +18,12 @@ class PhoneSpecs:
     def get_search_str(self):
         return self.search_strs[0]
 
+    def get_search_strs(self):
+        return self.search_strs
+
+    def get_other_sizes(self):
+        return self.other_sizes
+
     def get_storagesize(self):
         storage = self.storage_size.split()
         storage_str = ''
@@ -48,7 +54,19 @@ class Phone:
         return {
             'phone': name,
             'storage': storage_size,
-            'full_str': name + " " + storage_size.replace(" ", "")
+            'full_str': name + " " + storage_size.replace(" ", ""),
+        }
+
+    def get_match_data(self):
+        storage_size = self.phone_specs.get_storagesize()
+        other_storage_sizes = []
+        for other_storage_size in self.phone_specs.get_other_sizes():
+            other_storage_sizes.append(other_storage_size)
+            other_storage_sizes.append(other_storage_size.replace(" ", ""))
+        return {
+            'search_strs': self.phone_specs.get_search_strs(),
+            'storage_strs': [storage_size.replace(" ", "").lower(), storage_size.lower()],
+            'alt_specs': other_storage_sizes
         }
 
 
