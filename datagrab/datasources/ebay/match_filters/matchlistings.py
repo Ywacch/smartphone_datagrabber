@@ -9,7 +9,7 @@ def match_search_strs(match_strings, listing_titles):
     :param listing_titles:  a set containing each word in the listing title
     :return:
     """
-    if any(all(data in listing_titles for data in search_str) for search_str in match_strings):
+    if any(all(data in listing_titles for data in match_str) for match_str in match_strings):
         return True
     else:
         return False
@@ -62,17 +62,17 @@ def match_phone_listing(match_data, listing_title):
     # "Samsung Galaxy S8+" for example represent the same phone. Split the words of each search string into sets and
     # add them to a list
 
-    search_strs_list = []
-    for search_strs in match_data['search_strs']:
+    match_strs_list = []
+    for search_strs in match_data['match_strs']:
         split_string = search_strs.lower().split()
-        search_str_set = set(split_string)
-        search_strs_list.append(search_str_set)
+        match_str_set = set(split_string)
+        match_strs_list.append(match_str_set)
 
     # check if the phone has different storage sizes to check against that (make sure a 64gb phone isnt matched to
     # the same make but 128gb phone)
     if match_data['alt_specs']:
-        is_a_match = match_search_strs(search_strs_list, listing_titles) and match_storage_size(match_data, listing_titles)
+        is_a_match = match_search_strs(match_strs_list, listing_titles) and match_storage_size(match_data, listing_titles)
     else:
-        is_a_match = match_search_strs(search_strs_list, listing_titles)
+        is_a_match = match_search_strs(match_strs_list, listing_titles)
 
     return is_a_match

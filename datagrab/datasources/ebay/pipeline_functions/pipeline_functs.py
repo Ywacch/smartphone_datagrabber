@@ -1,8 +1,7 @@
-import traceback
-
-from datagrab.smartphone import make_phones
+from datagrab.domain_objects.smartphone import make_phones
 from datagrab.datasources.ebay import eBay_priceAPI
-from datagrab.datasources.ebay.phoneListings import EBayListing
+from datagrab.domain_objects.phoneListings import EBayListing
+from datagrab.datasources.ebay.pipeline_functions import sort_listings
 
 
 def make_phone_objs(phones_data):
@@ -40,5 +39,6 @@ def get_daily_data(phones, request_pages, listings_per_page):
     eBayAPI.get_listings()
     eBayAPI.save_listings()
 
-# TODO: reset calls daily
 
+def sort_daily_listings(ebay_phones):
+    sort_listings.run(ebay_phones)
