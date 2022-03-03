@@ -1,7 +1,6 @@
 from dataclasses import dataclass
-from bson.objectid import ObjectId
 from typing import List
-
+from datagrab import id_gen
 
 @dataclass
 class PhoneSpecs:
@@ -39,9 +38,12 @@ class Phone:
     """
 
     """
-    id: ObjectId
     priority: int
     phone_specs: PhoneSpecs
+
+    #
+    def __post_init__(self):
+        self.id_ = id_gen.generate_id(self.phone_specs.brand, self.phone_specs.series, self.phone_specs.model, self.phone_specs.storage_size)
 
     def get_search_data(self):
         """
@@ -64,10 +66,33 @@ class Phone:
             other_storage_sizes.append(other_storage_size)
             other_storage_sizes.append(other_storage_size.replace(" ", ""))
         return {
-            'search_strs': self.phone_specs.get_search_strs(),
+            'match_strs': self.phone_specs.get_search_strs(),
             'storage_strs': [storage_size.replace(" ", "").lower(), storage_size.lower()],
             'alt_specs': other_storage_sizes
         }
+
+    @property
+    def brand(self):
+        return self.phone_specs.brand
+
+    @property
+    def model(self):
+        return self.phone_specs.model
+
+    @property
+    def series(self):
+        return self.phone_specs.series
+
+    @property
+    def phone_name(self):
+        return self.get_search_data()['full_str']
+
+    @property
+    def size(self):
+        return self.phone_specs.get_storagesize()
+
+    def __str__(self):
+        return f"{self.phone_name}"
 
 
 def make_phones(phone_list):
@@ -97,7 +122,7 @@ def make_phones(phone_list):
                 phone_spec = PhoneSpecs(phone_dict.get('brand'), phone_dict.get('series'), phone_dict.get('model'),
                                         phone_dict.get('search_strs'), storage, exclude_storage)
 
-                new_phone = Phone(phone_dict.get('_id'), phone_dict.get('priority'), phone_spec)
+                new_phone = Phone(phone_dict.get('priority'), phone_spec)
                 phones.append(new_phone)
 
     return phones

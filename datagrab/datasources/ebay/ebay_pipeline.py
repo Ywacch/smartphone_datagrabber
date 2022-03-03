@@ -1,7 +1,6 @@
 import time
-from queue import PriorityQueue
-from datagrab.datasources.ebay import pipeline_functs
-from datagrab.database import mongo_reads
+from datagrab.datasources.ebay.pipeline_functions import pipeline_functs
+from datagrab.database import database_ops
 from datagrab import zeldr_log
 
 
@@ -25,8 +24,9 @@ def start_pipeline(delete_temp_files=True, send_mail=True, send_to_mongo=True, e
     # (1)
     zeldr_log.info('Retrieving phones from mongodb store')
 
-    phones_metadata = mongo_reads.get_phones_data()
-    phones_objects = pipeline_functs.make_phones(phones_metadata)
+    phones_metadata = database_ops.get_mongodb_phones()
+    phones_objects = pipeline_functs.make_phone_objs(phones_metadata)
+    #database_ops.update_postgres_phones(phones_objects)
     zeldr_log.info(f"{len(phones_metadata)} phones found in store with {len(phones_objects)} unique phone objects")
 
     phones = pipeline_functs.make_listing_containers(phones_objects)
@@ -39,5 +39,5 @@ def start_pipeline(delete_temp_files=True, send_mail=True, send_to_mongo=True, e
     zeldr_log.info(f"Code ran in {pipeline_stop_time-pipeline_start_time} seconds")
 
     #(2)
-
+    pipeline_functs.sort_daily_listings(phones)
     #(3)

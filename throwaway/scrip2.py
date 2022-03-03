@@ -1,10 +1,8 @@
 import json
 
-from datagrab.datasources.ebay import phoneListings
-from datagrab.database import mongo_reads
-from datagrab import smartphone
+from datagrab.database.mongo import mongo_reads
+from datagrab.domain_objects import smartphone, phoneListings
 from datagrab.datasources.ebay.match_filters import matchlistings
-import time
 
 phones = []
 for phone in smartphone.make_phones(mongo_reads.get_phones_data()):

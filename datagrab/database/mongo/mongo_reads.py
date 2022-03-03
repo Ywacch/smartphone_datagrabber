@@ -1,5 +1,5 @@
 import pymongo.errors
-from datagrab.database import mongo_init
+from datagrab.database.mongo import mongo_init
 
 
 def get_phones_data():

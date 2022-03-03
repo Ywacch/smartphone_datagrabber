@@ -1,4 +1,4 @@
-from datagrab.database import mongo_init
+from datagrab.database.mongo import mongo_init
 
 
 def prep_mongo_store(phones):
