@@ -26,7 +26,9 @@ def start_pipeline(delete_temp_files=True, send_mail=True, send_to_mongo=True, e
 
     phones_metadata = database_ops.get_mongodb_phones()
     phones_objects = pipeline_functs.make_phone_objs(phones_metadata)
-    #database_ops.update_postgres_phones(phones_objects)
+
+    database_ops.update_postgres_phones(phones_objects)
+
     zeldr_log.info(f"{len(phones_metadata)} phones found in store with {len(phones_objects)} unique phone objects")
 
     phones = pipeline_functs.make_listing_containers(phones_objects)
