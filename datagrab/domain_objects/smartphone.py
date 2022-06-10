@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import List
-from datagrab import id_gen
+from datagrab.domain_objects import id_gen
 
 @dataclass
 class PhoneSpecs:

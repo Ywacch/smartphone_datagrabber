@@ -1,6 +1,6 @@
 import json
 from datagrab import eBay_API_metrics
-from datagrab import zeldr_log
+from datagrab import datagrab_log
 
 
 def write_json(data, file, indent_len=2):
@@ -23,9 +23,9 @@ def get_json(file):
         with open(file, 'r') as jfile:
             return json.load(jfile)
     except FileNotFoundError:
-        zeldr_log.exception(f'{file}" can\'t be found')
+        datagrab_log.exception(f'{file}" can\'t be found')
     except Exception as e:
-        zeldr_log.exception(f'{e}')
+        datagrab_log.exception(f'{e}')
 
 
 def call_made(calls_made):

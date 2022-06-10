@@ -3,9 +3,11 @@ from datagrab.datasources.ebay.pipeline_functions import listingprocessor
 from datagrab.database import database_ops
 import json
 from dateutil import parser
-from datagrab import temp_listings_location
+from datagrab import temp_listings_location, email_log
 from os import listdir
 from os.path import isfile, join
+from typing import List
+from datagrab.domain_objects.phoneListings import EBayListing
 
 
 '''def get_proccess_dates():
@@ -67,7 +69,7 @@ def load_listings():  # slow function
     return listings_by_date
 
 
-def run(ebay_phones):
+def run(ebay_phones: List[EBayListing]):
     sorter = listingprocessor.ListingProcessor()
     sorter.load_phone_objs(ebay_phones)
     listings_by_date = load_listings()
@@ -79,6 +81,8 @@ def run(ebay_phones):
 
         sorter.match_phone_listings(listings)
         for phone in ebay_phones:
-            database_ops.add_phonelistings(phone.get_phone_listings())
+            phone_listings = phone.get_phone_listings()
+            email_log.info(f'{len(phone_listings)} listings matched to {phone.phone_name()} \n')
+            database_ops.add_phonelistings(phone_listings)
             phone.clear_listings()
         sorter.load_phone_objs(ebay_phones)

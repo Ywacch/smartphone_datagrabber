@@ -1,4 +1,5 @@
 import yaml
+from datagrab import datagrab_log
 from datagrab.database import postgres_config, mongo_config
 
 
@@ -19,6 +20,6 @@ def get_config(config_filename):
             parsed_yml = yaml.load(file, Loader=yaml.FullLoader)
             return parsed_yml
     except FileNotFoundError:
-        print(f" Config file not found. Please insert a file named {yaml_file} in the database/datafiles directory")
+        datagrab_log.error(f" Config file not found. Please insert a file named {yaml_file} in the database/datafiles directory")
     except Exception as e:
-        print(f"Error occurred at db_config: {e}")
+        datagrab_log.error(f"Error occurred at db_config: {e}")

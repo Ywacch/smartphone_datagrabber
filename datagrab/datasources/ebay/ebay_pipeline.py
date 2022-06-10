@@ -1,10 +1,10 @@
 import time
 from datagrab.datasources.ebay.pipeline_functions import pipeline_functs
 from datagrab.database import database_ops
-from datagrab import zeldr_log
+from datagrab import datagrab_log, emailer
 
 
-def start_pipeline(delete_temp_files=True, send_mail=True, send_to_mongo=True, ebay_page_reach=35, listings_per_page=100, recursive_get=True):
+def start_pipeline(delete_temp_files=True, ebay_page_reach=35, listings_per_page=100, recursive_get=True):
     """
     This is where the pipeline functions are set off.
 
@@ -22,24 +22,25 @@ def start_pipeline(delete_temp_files=True, send_mail=True, send_to_mongo=True, e
     pipeline_start_time = time.perf_counter()
 
     # (1)
-    zeldr_log.info('Retrieving phones from mongodb store')
+    datagrab_log.info('Retrieving phones from mongodb store')
 
     phones_metadata = database_ops.get_mongodb_phones()
     phones_objects = pipeline_functs.make_phone_objs(phones_metadata)
 
     database_ops.update_postgres_phones(phones_objects)
 
-    zeldr_log.info(f"{len(phones_metadata)} phones found in store with {len(phones_objects)} unique phone objects")
+    datagrab_log.info(f"{len(phones_metadata)} phones found in store with {len(phones_objects)} unique phone objects")
 
     phones = pipeline_functs.make_listing_containers(phones_objects)
 
-    zeldr_log.info("Beginning eBay Calls")
+    datagrab_log.info("Beginning eBay Calls")
     pipeline_functs.get_daily_data(phones, ebay_page_reach, listings_per_page)
 
     pipeline_stop_time = time.perf_counter()
 
-    zeldr_log.info(f"Code ran in {pipeline_stop_time-pipeline_start_time} seconds")
+    datagrab_log.info(f"Code ran in {pipeline_stop_time-pipeline_start_time} seconds")
 
     #(2)
     pipeline_functs.sort_daily_listings(phones)
     #(3)
+    emailer.send_mail()

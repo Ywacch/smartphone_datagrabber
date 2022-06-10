@@ -37,3 +37,6 @@ class EBayListing:
 
     def __str__(self):
         return f"{self.phone} object holding {len(self.listings)} listings"
+    
+    def phone_name(self):
+        return Phone.phone_name

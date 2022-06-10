@@ -30,10 +30,9 @@ Codebase for collecting smartphone data online from different sources (retail st
   
   
      Currently Implementing:
-    
-      -eBay
-  
-    Coming soon:
-    
-      - Twitter
+      -Twitter
       - Reddit
+      
+    
+    Done:
+      - eBay

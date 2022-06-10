@@ -1,4 +1,4 @@
-from datagrab import zeldr_log
+from datagrab import datagrab_log
 from datagrab.datasources import priceapi
 from dataclasses import dataclass, field
 from typing import List, Any
@@ -7,7 +7,7 @@ import time
 from asyncebay.config import Config
 from asyncebay.request_builder import FindingRequest
 from asyncebay import ebay_caller
-from datagrab.datasources.ebay import ebay_config, utils, findingKey
+from datagrab.datasources.ebay import ebay_config, files, findingKey
 from datagrab import temp_listings_store
 
 
@@ -23,7 +23,7 @@ class eBayPriceAPI(priceapi.PriceAPI):
     listings: List[Any] = field(default_factory=lambda: [])
 
     def execute_requests(self):
-        utils.reset_daily_call_limit()
+        files.reset_daily_call_limit()
 
         config_dict = {
             'service_name': 'FindingService',
@@ -44,9 +44,9 @@ class eBayPriceAPI(priceapi.PriceAPI):
         ebay_caller.start(finding.response_list, finding.urls, finding.headers)
         call_stop = time.perf_counter()
 
-        zeldr_log.info(f'eBay call made {calls_made} requests in {call_stop - call_start} seconds')
-        zeldr_log.info(f'{len(finding.response_list)} responses returned')
-        utils.call_made(calls_made)
+        datagrab_log.info(f'eBay call made {calls_made} requests in {call_stop - call_start} seconds')
+        datagrab_log.info(f'{len(finding.response_list)} responses returned')
+        files.call_made(calls_made)
         self.listings.extend(finding.response_list)
 
     def build_urls(self, request):
@@ -68,7 +68,7 @@ class eBayPriceAPI(priceapi.PriceAPI):
                 listings.extend(listing['findItemsAdvancedResponse'][0]["searchResult"][0]["item"])
             except KeyError:
                 empty_responses += 1
-        zeldr_log.info(f"{empty_responses} responses contain no listings")
+        datagrab_log.info(f"{empty_responses} responses contain no listings")
         self.listings = self.remove_multi_variations(listings)
 
     def remove_multi_variations(self, listings):
@@ -83,8 +83,8 @@ class eBayPriceAPI(priceapi.PriceAPI):
                 if listing["isMultiVariationListing"][0] == 'false':
                     clean_listings.append(listing)
             except Exception as e:
-                zeldr_log.exception(e)
+                datagrab_log.exception(e)
         return clean_listings
 
     def save_listings(self):
-        utils.write_json({'listings': self.listings}, temp_listings_store)
+        files.write_json({'listings': self.listings}, temp_listings_store)
