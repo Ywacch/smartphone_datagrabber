@@ -1,7 +1,9 @@
 import psycopg2
 from psycopg2.sql import SQL, Identifier
 import psycopg2.extras as psy_extras
+
 from datagrab.database import db_config
+from datagrab.database.postgres import schema
 
 
 class Database:
@@ -13,6 +15,15 @@ class Database:
                                                password=config["password"])
         except Exception as e:
             print(e)
+    
+    
+    def init_tables(self):
+        with open(schema, 'r') as file:
+            statement = file.read
+        
+        with self.connection.cursor() as cursor:
+            cursor.execute(statement)
+
 
     def close_db(self):
         self.connection.close()

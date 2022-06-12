@@ -1,4 +1,3 @@
-import email
 import os
 import datetime
 import logging
