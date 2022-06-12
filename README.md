@@ -1,5 +1,5 @@
 # Zeldr_datagrab
-Codebase for collecting smartphone data online from different sources (retail store prices, sentiment and review, etc)
+Codebase for collecting smartphone market data online from different sources (retail store prices, sentiment and review, etc)
 
 ## Examples of Data sources
   - eCommerce sites:eBay, Amazon, Gazelle, BestBuy
