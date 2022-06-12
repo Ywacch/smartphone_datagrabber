@@ -2,6 +2,11 @@ from datagrab.database.mongo import mongo_reads
 from datagrab.database.postgres import postgres_db
 
 
+def create_tables():
+    database = postgres_db.Database()
+    database.init_tables()
+
+
 def get_mongodb_phones():
     return mongo_reads.get_phones_data()
 

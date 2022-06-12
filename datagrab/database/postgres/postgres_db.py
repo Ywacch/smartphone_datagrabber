@@ -2,6 +2,7 @@ import psycopg2
 from psycopg2.sql import SQL, Identifier
 import psycopg2.extras as psy_extras
 
+from datagrab import datagrab_log
 from datagrab.database import db_config
 from datagrab.database.postgres import schema
 
@@ -14,16 +15,22 @@ class Database:
             self.connection = psycopg2.connect(host=config['host'], database=config['database'], user=config["user"],
                                                password=config["password"])
         except Exception as e:
-            print(e)
+            datagrab_log.error(e)
     
     
     def init_tables(self):
-        with open(schema, 'r') as file:
-            statement = file.read
-        
-        with self.connection.cursor() as cursor:
-            cursor.execute(statement)
+        try:
+            with open(schema, 'r') as file:
+                statement = file.read()
+        except Exception as e:
+            datagrab_log.error(e)
+            return
 
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute(statement)
+        except Exception as e:
+            datagrab_log.error(e)
 
     def close_db(self):
         self.connection.close()

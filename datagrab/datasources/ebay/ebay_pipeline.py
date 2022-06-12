@@ -22,6 +22,7 @@ def start_pipeline(delete_temp_files=True, ebay_page_reach=35, listings_per_page
     pipeline_start_time = time.perf_counter()
 
     # (1)
+    database_ops.create_tables()
     datagrab_log.info('Retrieving phones from mongodb store')
 
     phones_metadata = database_ops.get_mongodb_phones()
