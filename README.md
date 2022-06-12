@@ -30,7 +30,7 @@ Codebase for collecting smartphone data online from different sources (retail st
   
   
      Currently Implementing:
-      -Twitter
+      - Twitter
       - Reddit
       
     
