@@ -37,7 +37,7 @@ create table IF NOT EXISTS phonelistings(
 	item_id varchar(12),
 	date_added date,
 	
-	primary key (item_id, date_added),
+	primary key (phone_id, item_id, date_added),
 	foreign key (item_id, date_added) references listings (item_id, date_added) on delete cascade on update cascade,
 	foreign key (phone_id) references smartphones (phone_id) on update cascade
 );
