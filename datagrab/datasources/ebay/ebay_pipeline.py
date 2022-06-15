@@ -23,10 +23,11 @@ def start_pipeline(delete_temp_files=True, ebay_page_reach=35, listings_per_page
 
     # (1)
     database_ops.create_tables()
-    datagrab_log.info('Retrieving phones from mongodb store')
 
     phones_metadata = database_ops.get_mongodb_phones()
-    phones_objects = pipeline_functs.make_phone_objs(phones_metadata)
+
+    if phones_metadata:
+        phones_objects = pipeline_functs.make_phone_objs(phones_metadata)
 
     database_ops.update_postgres_phones(phones_objects)
 
