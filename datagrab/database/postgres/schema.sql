@@ -21,16 +21,6 @@ create table IF NOT EXISTS listings(
 	PRIMARY KEY(item_id, date_added)
 );
 
-create table IF NOT EXISTS phonelistings(
-	phone_id varchar(32),
-	item_id varchar(12),
-	date_added date,
-	
-	primary key (item_id, date_added),
-	foreign key (item_id, date_added) references listings (item_id, date_added) on delete cascade on update cascade,
-	foreign key (phone_id) references smartphones (phone_id) on update cascade
-);
-
 create table IF NOT EXISTS smartphones(
 	phone_id varchar(32),
 	brand varchar,
@@ -40,4 +30,14 @@ create table IF NOT EXISTS smartphones(
 	storage_size varchar,
 
 	primary key (phone_id)
+);
+
+create table IF NOT EXISTS phonelistings(
+	phone_id varchar(32),
+	item_id varchar(12),
+	date_added date,
+	
+	primary key (item_id, date_added),
+	foreign key (item_id, date_added) references listings (item_id, date_added) on delete cascade on update cascade,
+	foreign key (phone_id) references smartphones (phone_id) on update cascade
 );
