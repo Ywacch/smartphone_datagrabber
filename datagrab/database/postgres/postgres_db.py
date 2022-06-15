@@ -27,8 +27,9 @@ class Database:
             return
 
         try:
-            with self.connection.cursor() as cursor:
-                cursor.execute(statement)
+            with self.connection:
+                with self.connection.cursor() as cursor:
+                    cursor.execute(statement)
         except Exception as e:
             datagrab_log.error(e)
 
