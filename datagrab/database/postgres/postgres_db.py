@@ -29,6 +29,7 @@ class Database:
         try:
             with self.connection:
                 with self.connection.cursor() as cursor:
+                    datagrab_log.debug(f'Attempting to execute "{statement}"')
                     cursor.execute(statement)
         except Exception as e:
             datagrab_log.error(e)
