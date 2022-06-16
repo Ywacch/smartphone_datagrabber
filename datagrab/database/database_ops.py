@@ -23,14 +23,12 @@ def update_postgres_phones(phones):
 
 
 def add_listings(listings):
-    datagrab_log.info('Attempting to save listings data to postgres')
     listings_db = postgres_db.ListingTable()
     listings_db.add_listings(listings)
     listings_db.close_db()
 
 
 def add_phonelistings(phonelistings):
-    datagrab_log.info('Attempting to save matched listings data to postgres')
     phonelistings_db = postgres_db.PhoneListingTable()
     phonelistings_db.add_phonelistings(phonelistings)
     phonelistings_db.close_db()
