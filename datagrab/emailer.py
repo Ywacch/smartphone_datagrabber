@@ -1,3 +1,4 @@
+from logging import Logger
 import smtplib
 import codecs
 from email.mime.text import MIMEText
@@ -16,6 +17,10 @@ def parse_config():
         datagrab_log.error(f" Config file not found. Please insert a file named {email_config} in the database/datafiles directory")
     except Exception as e:
         datagrab_log.error(f"Error occurred at db_config: {e}")
+
+
+def get_log_file(logger: Logger):
+    return logger.handlers[0].baseFilename
 
 
 def send_mail():
@@ -41,7 +46,7 @@ def send_mail():
     msg.attach(MIMEText(email_body, 'plain'))
 
     # make another database for stored_listings (too big for google)
-    send_files = {'datagrab.log': datagrab_log, 'smartphones.log': email_log}
+    send_files = {'datagrab.log': get_log_file(datagrab_log), 'smartphones.log': get_log_file(email_log)}
 
     for filename, file in send_files.items():
         jfile = codecs.open(file, "r", "utf-8")
