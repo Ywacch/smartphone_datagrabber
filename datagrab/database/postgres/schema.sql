@@ -18,7 +18,7 @@ create table IF NOT EXISTS listings(
 	listing_type varchar,
 	date_added date,
 	canadian_price_base numeric,
-	canadian_total numeric
+	canadian_total numeric,
 
 	PRIMARY KEY(item_id, date_added)
 );
