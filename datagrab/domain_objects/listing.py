@@ -1,6 +1,15 @@
 import decimal
 from dateutil import parser
 import json
+from datagrab.datasources.ebay.exchange_rate import get_fxrates
+
+fx_rates = get_fxrates()
+currency_codes = {
+    'USD': 'FXUSDCAD',
+    'EUR': 'FXEURCAD',
+    'AUD': 'FXAUDCAD',
+    'GBP': 'FXGBPCAD',
+}
 
 
 class Listing:
@@ -134,6 +143,15 @@ class Listing:
             return listing['listingInfo'][0]['listingType'][0]
         except KeyError:
             return None
+
+    @staticmethod
+    def get_cad_base(listing):
+        currency = Listing.get_currency(listing)
+        price = Listing.get_price(listing)
+        if currency == 'CAD' and price:
+            return price
+        elif currency != 'CAD' and price and fx_rates:
+            return fx_rates[currency_codes[currency]] * price
 
 
 '''class Listing:

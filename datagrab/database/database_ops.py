@@ -32,3 +32,8 @@ def add_phonelistings(phonelistings):
     phonelistings_db = postgres_db.PhoneListingTable()
     phonelistings_db.add_phonelistings(phonelistings)
     phonelistings_db.close_db()
+
+def add_exchange_rate(fxrate):
+    fx_db = postgres_db.ExchangeRateTable()
+    fx_db.add_exchange_rate(fxrate)
+    fx_db.close_db()

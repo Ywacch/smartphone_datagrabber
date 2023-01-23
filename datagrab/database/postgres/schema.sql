@@ -43,3 +43,13 @@ create table IF NOT EXISTS phonelistings(
 	foreign key (item_id, date_added) references listings (item_id, date_added) on delete cascade on update cascade,
 	foreign key (phone_id) references smartphones (phone_id) on update cascade
 );
+
+create table IF NOT EXISTS exchange_rate(
+    date_ date,
+    fxaudcad numeric,
+    fxeurcad numeric,
+    fxgbpcad numeric,
+    fxusdcad numeric,
+
+    primary key (date_)
+);

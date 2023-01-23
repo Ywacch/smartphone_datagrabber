@@ -62,11 +62,11 @@ class ListingTable(Database):
                 sql_statement = SQL('INSERT INTO {} (item_id, title, global_id, product_id, postal_code, '
                                     'location_, country, currency, price, condition_, shipping_type, '
                                     'shipping_currency, shipping_cost, top_rated, start_date, end_date, listing_type, '
-                                    'date_added) '
+                                    'date_added, canadian_price_base) '
                                     'VALUES (%(item_id)s, %(title)s, %(global_id)s, %(product_id)s, %(postal_code)s, '
                                     '%(location_)s, %(country)s, %(currency)s, %(price)s, %(condition_)s, '
                                     '%(shipping_type)s, %(shipping_currency)s, %(shipping_cost)s, %(top_rated)s, '
-                                    '%(start_date)s, %(end_date)s, %(listing_type)s, %(date_added)s)'
+                                    '%(start_date)s, %(end_date)s, %(listing_type)s, %(date_added)s, %(canadian_price_base)s)'
                                     'ON CONFLICT (item_id, date_added) DO NOTHING;').format(Identifier(self.table_name))
                 psy_extras.execute_batch(cursor, sql_statement, listings)
 
@@ -115,3 +115,15 @@ class PhoneListingTable(Database):
                                     'VALUES (%(phone_id)s, %(item_id)s, %(date_added)s)'
                                     'ON CONFLICT (phone_id, item_id, date_added) DO NOTHING;').format(Identifier(self.table_name))
                 psy_extras.execute_batch(cursor, sql_statement, phonelistings)
+
+
+class ExchangeRateTable(Database):
+    def __init__(self):
+        super(ExchangeRateTable, self).__init__()
+        self.table_name = "exchange_rate"
+
+    def add_exchange_rate(self, fxrate):
+        with self.connection:
+            with self.connection.cursor() as cursor:
+                statement = SQL('INSERT INTO exchange_rate (date_, FXAUDCAD, FXEURCAD, FXGBPCAD, FXUSDCAD) VALUES (%s, %s, %s, %s, %s)')
+                cursor.execute(statement, (fxrate['date'], fxrate['FXAUDCAD'], fxrate['FXEURCAD'], fxrate['FXGBPCAD'], fxrate['FXUSDCAD']))

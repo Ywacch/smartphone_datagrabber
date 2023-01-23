@@ -1,6 +1,13 @@
 from queue import PriorityQueue
 from datagrab.datasources.ebay.match_filters import matchlistings
-from datagrab.domain_objects.listing import Listing
+from datagrab.domain_objects.listing import Listing, fx_rates
+from datagrab.database import database_ops
+from datagrab import datagrab_log
+
+try:
+    database_ops.add_exchange_rate(fx_rates)
+except Exception as e:
+    datagrab_log.error(e)
 
 
 def remove_duplicates(listings):
@@ -47,7 +54,8 @@ class ListingProcessor:
             'start_date': Listing.get_startdate(listing),
             'end_date': Listing.get_enddate(listing),
             'listing_type': Listing.get_listingtype(listing),
-            'date_added': date_collected
+            'date_added': date_collected,
+            'canadian_price_base': Listing.get_cad_base(listing)
 
         } for listing in unique_listings]
         return filtered_listings
