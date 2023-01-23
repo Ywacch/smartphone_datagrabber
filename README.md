@@ -1,5 +1,5 @@
 # Salephone datagrab
-Codebase for collecting smartphone market data online from different sources (retail store prices, sentiment and review, etc)
+Codebase for collecting smartphone market data online from different sources (eCommerce prices, sentiment and review, etc)
     
     Implemented:
       - eBay
