@@ -7,7 +7,7 @@ lxml==4.6.3
 pymongo==3.11.3
 PyYAML==5.4.1
 requests==2.25.1
-urllib3==1.26.4
+urllib3==1.26.5
 AsynceBay~=1.0.0
 python-dateutil~=2.8.2
 psycopg2-binary~=2.9.3
